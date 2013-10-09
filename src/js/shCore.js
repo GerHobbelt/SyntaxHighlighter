@@ -1066,7 +1066,7 @@ function getSyntaxHighlighterScriptTags()
 		;
 
 	for (var i = 0, l = tags.length; i < l; i++)
-		if (tags[i].type == 'syntaxhighlighter')
+		if (tags[i].type == 'text/syntaxhighlighter')
 			result.push(tags[i]);
 
 	return result;
