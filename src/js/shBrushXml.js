@@ -31,8 +31,9 @@
 			}
 
 			if (tag != null)
+				var newtag0 = tag[0].replace(/&lt;/ig, "    ") ; // replace &lt; with empty four space, assume no xml element can be element
 				result.push(
-					new constructor(tag.name, match.index + tag[0].indexOf(tag.name), 'keyword')
+					new constructor(tag.name, match.index + newtag0.indexOf(tag.name), 'keyword')
 				);
 
 			return result;

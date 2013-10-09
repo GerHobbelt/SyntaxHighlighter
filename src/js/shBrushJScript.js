@@ -6,7 +6,7 @@
 	function Brush()
 	{
 		var keywords =	'break case catch class continue ' +
-				'default delete do else enum export extends false  ' +
+				'default delete do else enum export extends false finally ' +
 				'for function if implements import in instanceof ' +
 				'interface let new null package private protected ' +
 				'static return super switch ' +
