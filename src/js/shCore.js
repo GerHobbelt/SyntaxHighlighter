@@ -59,6 +59,9 @@ var sh = {
 		/** Enables or disables automatic links. */
 		'auto-links' : true,
 
+		/** Enables or disables stripping of auto-generated links. */
+		'strip-links' : false,
+		
 		/** Gets or sets light mode. Equavalent to turning off gutter and toolbar. */
 		'light' : false,
 
@@ -113,6 +116,7 @@ var sh = {
 		multiLineSingleQuotedString	: XRegExp("'([^\\\\']|\\\\.)*'", 'gs'),
 		xmlComments					: XRegExp('(&lt;|<)!--.*?--(&gt;|>)', 'gs'),
 		url							: /\w+:\/\/[\w-.\/?%&=:@;#]*/g,
+		aTag						: /(?:&lt;|<)\s*a\s+href="(.*)"\s*(?:&gt;|>)(.+)(?:&lt;|<)\/\s*a\s*(?:&gt;|>)/gm,
 
 		/** <?= ?> tags. */
 		phpScriptTags 				: { left: /(&lt;|<)\?(?:=|php)?/g, right: /\?(&gt;|>)/g, 'eof' : true },
@@ -1076,6 +1080,38 @@ function processUrls(code)
 };
 
 /**
+ * Removes all <a/> tags from the code, when the link address matches
+ * the link's text.
+ * e.g. <a href="http://example.com">http://example.com</a> => http://example.com
+ * @param {String} Original Input code.
+ * @return {String} Returns code without </a> tags.
+ */
+function stripAutoUrls(code)
+{
+	// Need to strip out the modifiers, so it can be reused
+	var a = new RegExp(sh.regexLib.aTag.source);
+
+	return code.replace(sh.regexLib.aTag, function(m)
+	{
+		var href = '',
+			text = '',
+			match = null
+			;
+
+		if (match = a.exec(m))
+		{
+			href = match[1];
+			text = match[2];
+
+			if (href == text)
+				return href;
+		}
+		
+		return m;
+	});
+};
+
+/**
  * Finds all <SCRIPT TYPE="syntaxhighlighter" /> elementss.
  * @return {Array} Returns array of all found SyntaxHighlighter tags.
  */
@@ -1086,7 +1122,7 @@ function getSyntaxHighlighterScriptTags()
 		;
 
 	for (var i = 0, l = tags.length; i < l; i++)
-		if (tags[i].type == 'syntaxhighlighter')
+		if (tags[i].type == 'text/syntaxhighlighter')
 			result.push(tags[i]);
 
 	return result;
@@ -1655,6 +1691,10 @@ sh.Highlighter.prototype = {
 
 		if (gutter)
 			lineNumbers = this.figureOutLineNumbers(code);
+
+		// remove all URLs, if specified		
+		if (this.getParam('strip-links'))
+			code = stripAutoUrls(code);
 
 		// find matches in the code using brushes regex list
 		matches = this.findMatches(this.regexList, code);
