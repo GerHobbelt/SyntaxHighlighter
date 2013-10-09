@@ -31,7 +31,7 @@ var sh = {
 
 		/** Lines to highlight. */
 		'highlight' : null,
-		
+
 		/** Annotation to show. */
 		'annotations' : null,
 
@@ -61,7 +61,7 @@ var sh = {
 
 		/** Enables or disables stripping of auto-generated links. */
 		'strip-links' : false,
-		
+
 		/** Gets or sets light mode. Equavalent to turning off gutter and toolbar. */
 		'light' : false,
 
@@ -352,14 +352,15 @@ var sh = {
 				element.id = target.id;
 
 			target.parentNode.replaceChild(element, target);
-			
+
 			//postprocess Annotations
-			var annotationlines = document.querySelectorAll("div#highlighter_"+highlighter.id+" table td.gutter div.annotation.annotation_line_spacer");
-			var annotationcodes = document.querySelectorAll("div#highlighter_"+highlighter.id+" table td.code div.annotation");
-			for(var j = 0; j < annotationlines.length; j++){
-				annotationlines[j].setAttribute("style", "height: "+annotationcodes[j].offsetHeight+"px !important");
+			var annotationlines = document.querySelectorAll("div#highlighter_" + highlighter.id + " table td.gutter div.annotation.annotation_line_spacer");
+			var annotationcodes = document.querySelectorAll("div#highlighter_" + highlighter.id + " table td.code div.annotation");
+			for (var j = 0; j < annotationlines.length; j++)
+			{
+				annotationlines[j].setAttribute("style", "height: " + annotationcodes[j].offsetHeight + "px !important");
 			}
-			
+
 		}
 	},
 
@@ -1106,7 +1107,7 @@ function stripAutoUrls(code)
 			if (href == text)
 				return href;
 		}
-		
+
 		return m;
 	});
 };
@@ -1433,11 +1434,11 @@ sh.Highlighter.prototype = {
 	getLineHighlight: function(lineNumber)
 	{
 		var list = this.getParam('highlight', []);
- 
+
 		if (typeof(list) != 'object' && list.push == null)
 			list = [ list ];
-		if(Object.prototype.toString.apply(list) === '[object Array]')
-			return (indexOf(list, lineNumber.toString() != -1)?'highlighted':null);
+		if (Object.prototype.toString.apply(list) === '[object Array]')
+			return (indexOf(list, lineNumber.toString() != -1) ? 'highlighted' : null);
 		else
 			return list[lineNumber];
 	},
@@ -1454,7 +1455,7 @@ sh.Highlighter.prototype = {
 
 		return typeof list[lineNumber] != 'undefined';
 	},
-	
+
 	/**
 	 * Generates a div containing all the annotations for a specific line
 	 */
@@ -1465,20 +1466,22 @@ sh.Highlighter.prototype = {
 			'annotation',
 			'annotation' + lineNumber
 		];
-		
+
 		if (typeof(list) != 'object')
 			return '';
-			
+
 		var result = '';
-		
-		if(typeof list[lineNumber] != 'undefined'){
-			for( var i = 0; i < list[lineNumber].length; i++){
+
+		if (typeof list[lineNumber] != 'undefined')
+		{
+			for ( var i = 0; i < list[lineNumber].length; i++)
+			{
 				var annotation = list[lineNumber][i];
-				
-				result += '<div class="'+annotation.classes.join(' ')+'">'+annotation.message+'</div>';
+
+				result += '<div class="' + annotation.classes.join(' ') + '">' + annotation.message + '</div>';
 			}
 		}
-		return '<div class="' + classes.join(' ') + '">'+result+'</div>';
+		return '<div class="' + classes.join(' ') + '">' + result + '</div>';
 	},
 
 	/**
@@ -1495,9 +1498,9 @@ sh.Highlighter.prototype = {
 			'index' + lineIndex,
 			'alt' + (lineNumber % 2 == 0 ? 1 : 2).toString()
 		];
-		
+
 		classes.push(this.getLineHighlight(lineNumber));
-			
+
 		if (lineNumber == 0)
 			classes.push('break');
 
@@ -1531,7 +1534,7 @@ sh.Highlighter.prototype = {
 
 			html += this.getLineHtml(i, lineNumber, code);
 			if (this.isLineAnnotated(lineNumber))
-				html += '<div class="annotation annotation_line_spacer annotation'+lineNumber+'">&nbsp;</div>';
+				html += '<div class="annotation annotation_line_spacer annotation' + lineNumber + '">&nbsp;</div>';
 		}
 
 		return html;
@@ -1573,17 +1576,16 @@ sh.Highlighter.prototype = {
 
 			if (line.length == 0)
 				line = sh.config.space;
-			
+
 			html += this.getLineHtml(
 				i,
 				lineNumber,
 				(spaces != null ? '<code class="' + brushName + ' spaces">' + spaces + '</code>' : '') + line
 			);
-			
+
 			if (this.isLineAnnotated(lineNumber))
 				html += this.getAnnotations(lineNumber);
 		}
-		
 
 		return html;
 	},
@@ -1692,7 +1694,7 @@ sh.Highlighter.prototype = {
 		if (gutter)
 			lineNumbers = this.figureOutLineNumbers(code);
 
-		// remove all URLs, if specified		
+		// remove all URLs, if specified
 		if (this.getParam('strip-links'))
 			code = stripAutoUrls(code);
 
