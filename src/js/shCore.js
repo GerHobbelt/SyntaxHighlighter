@@ -92,7 +92,7 @@ var sh = {
 			brushNotHtmlScript : 'Brush wasn\'t configured for html-script option: ',
 
 			// this is populated by the build script
-			aboutDialog : '@ABOUT@'
+			aboutDialog : '<%- about %>'
 		}
 	},
 
